@@ -10,10 +10,31 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-export const App = () => {
+import PropTypes from "prop-types";
+import { loggedAction } from "../../../store/filmSlice";
+
+export const SignIn = ({ setShowAlert }) => {
+  const dispatch = useDispatch();
   const defaultTheme = createTheme();
+  const navigate = useNavigate();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    let email = data.get("email");
+    let password = data.get("password");
+    if (email && password) {
+      dispatch(loggedAction({ email, password }));
+      navigate("/");
+    } else {
+      setShowAlert(true);
+    }
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -33,7 +54,12 @@ export const App = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -58,7 +84,12 @@ export const App = () => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
               Sign In
             </Button>
             <Grid container>
@@ -78,4 +109,8 @@ export const App = () => {
       </Container>
     </ThemeProvider>
   );
+};
+
+SignIn.propTypes = {
+  setShowAlert: PropTypes.func,
 };

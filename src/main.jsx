@@ -9,13 +9,17 @@ import "@fontsource/roboto/700.css";
 import { BrowserRouter } from "react-router-dom";
 import { FilmRoutes } from "./routes/FilmRoutes";
 import { ContextProvider } from "./context/ContextProvider";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ContextProvider>
-      <BrowserRouter>
-        <FilmRoutes />
-      </BrowserRouter>
-    </ContextProvider>
+    <Provider store={store}>
+      <ContextProvider>
+        <BrowserRouter>
+          <FilmRoutes />
+        </BrowserRouter>
+      </ContextProvider>
+    </Provider>
   </React.StrictMode>
 );
