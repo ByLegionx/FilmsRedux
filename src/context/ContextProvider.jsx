@@ -7,7 +7,10 @@ export const useAppContext = () => useContext(AppContext);
 export const ContextProvider = ({ children }) => {
   const [totalFilmElements, setTotalFilmElements] = useState(0);
   const [allFilms, setAllFilms] = useState([]);
+  const [file, setFile] = useState(null);
   const data = {
+    file,
+    setFile,
     allFilms,
     setAllFilms,
     totalFilmElements,

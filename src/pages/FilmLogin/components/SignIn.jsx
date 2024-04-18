@@ -28,8 +28,9 @@ export const SignIn = ({ setShowAlert }) => {
 
     let email = data.get("email");
     let password = data.get("password");
+
     if (email && password) {
-      dispatch(loggedAction({ email, password }));
+      dispatch(loggedAction({ email, password, icon: null }));
       navigate("/");
     } else {
       setShowAlert(true);

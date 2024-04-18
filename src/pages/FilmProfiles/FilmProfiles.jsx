@@ -8,9 +8,11 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components/Header";
-import { logout } from "../../store/filmSlice";
+import { loggedAction, logout } from "../../store/filmSlice";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+
+import { useAppContext } from "../../context/ContextProvider";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -28,7 +30,15 @@ export const FilmProfiles = () => {
   const { email, password } = useSelector((state) => state.film);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(email);
+  const { file, setFile } = useAppContext();
+
+  const handleFileChange = (event) => {
+    const icon = event.target.files[0];
+
+    dispatch(loggedAction({ email, password, icon: icon.name }));
+    setFile(icon);
+  };
+
   return (
     <>
       <Header />
@@ -44,7 +54,7 @@ export const FilmProfiles = () => {
         >
           <Avatar
             alt="Remy Sharp"
-            src="/static/images/avatar/1.jpg"
+            src={file && URL.createObjectURL(file)}
             sx={{ width: 200, height: 200 }}
           >
             <LockOutlinedIcon />
@@ -57,7 +67,7 @@ export const FilmProfiles = () => {
             startIcon={<CloudUploadIcon />}
           >
             Upload file
-            <VisuallyHiddenInput type="file" />
+            <VisuallyHiddenInput type="file" onChange={handleFileChange} />
           </Button>
 
           <Typography component="h1" variant="h5">

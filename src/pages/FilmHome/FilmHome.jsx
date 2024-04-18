@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { getFilms } from "../../services/getFilms";
 import { useAppContext } from "../../context/ContextProvider";
@@ -12,6 +12,7 @@ export const FilmHome = () => {
   const { allFilms, totalFilmElements, setTotalFilmElements, setAllFilms } =
     useAppContext();
 
+  const [startIndex, setStartIndex] = useState(0);
   useEffect(() => {
     const fetch = async () => {
       const data = await getFilms();
@@ -30,7 +31,7 @@ export const FilmHome = () => {
         <Grid container spacing={2}>
           {allFilms &&
             allFilms
-              .slice(0, 6)
+              .slice(startIndex, startIndex + 6)
               .map(({ title, images, description }) => (
                 <FilmCards
                   key={title}
@@ -44,7 +45,19 @@ export const FilmHome = () => {
       {totalFilmElements && (
         <Box component="section" sx={{ p: 5 }}>
           <Grid container justifyContent="center">
-            <Pagination count={totalFilmElements / 6} color="primary" />
+            <Pagination
+              count={totalFilmElements / 6}
+              color="primary"
+              onClick={(event) => {
+                setStartIndex(
+                  Math.max(
+                    0,
+                    allFilms.length -
+                      6 * (parseInt(event.target.textContent) - 1)
+                  )
+                );
+              }}
+            />
           </Grid>
         </Box>
       )}

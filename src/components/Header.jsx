@@ -11,29 +11,33 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/filmSlice";
+import { useAppContext } from "../context/ContextProvider";
 
 export const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { file } = useAppContext();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = (event) => {
-    console.log(event.target.outerText);
     if (event.target.outerText === "Profile") {
       setAnchorEl(null);
       navigate("/profile");
-    } else {
+    }
+    if (event.target.outerText === "Logout") {
+      setAnchorEl(null);
       dispatch(logout());
+    } else {
+      setAnchorEl(null);
     }
   };
 
   const { status } = useSelector((state) => state.film);
 
-  console.log(status);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -61,7 +65,10 @@ export const Header = () => {
                 aria-expanded={open ? "true" : undefined}
                 onClick={handleClick}
               >
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                <Avatar
+                  alt="Remy Sharp"
+                  src={file && URL.createObjectURL(file)}
+                />
               </Button>
               <Menu
                 id="basic-menu"
